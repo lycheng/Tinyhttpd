@@ -4,14 +4,7 @@
  * CSE 4344 (Network concepts), Prof. Zeigler
  * University of Texas at Arlington
  */
-/* This program compiles for Sparc Solaris 2.6.
- * To compile for Linux:
- *  1) Comment out the #include <pthread.h> line.
- *  2) Comment out the line that defines the variable newthread.
- *  3) Comment out the two lines that run pthread_create().
- *  4) Uncomment the line that runs accept_request().
- *  5) Remove -lsocket from the Makefile.
- */
+
 #include <stdio.h>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -22,7 +15,7 @@
 #include <strings.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <pthread.h>
+// #include <pthread.h>
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -493,7 +486,7 @@ int main(void)
     int client_sock = -1;
     struct sockaddr_in client_name;
     socklen_t  client_name_len = sizeof(client_name);
-    pthread_t newthread;
+    // pthread_t newthread;
 
     server_sock = startup(&port);
     printf("httpd running on port %d\n", port);
@@ -505,9 +498,9 @@ int main(void)
                 &client_name_len);
         if (client_sock == -1)
             error_die("accept");
-        /* accept_request(&client_sock); */
-        if (pthread_create(&newthread , NULL, (void *)accept_request, (void *)(intptr_t)client_sock) != 0)
-            perror("pthread_create");
+        accept_request(&client_sock);
+        // if (pthread_create(&newthread , NULL, (void *)accept_request, (void *)(intptr_t)client_sock) != 0)
+        //     perror("pthread_create");
     }
 
     close(server_sock);
