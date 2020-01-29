@@ -15,7 +15,6 @@
 #include <strings.h>
 #include <string.h>
 #include <sys/stat.h>
-// #include <pthread.h>
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -37,7 +36,7 @@ int get_line(int, char *, int);
 void headers(int, const char *);
 void not_found(int);
 void serve_file(int, const char *);
-int startup(u_short *);
+int startup(unsigned short *);
 void unimplemented(int);
 
 /**********************************************************************/
@@ -419,7 +418,7 @@ void serve_file(int client, const char *filename)
  * Parameters: pointer to variable containing the port to connect on
  * Returns: the socket */
 /**********************************************************************/
-int startup(u_short *port)
+int startup(unsigned short *port)
 {
     int httpd = 0;
     int on = 1;
@@ -432,8 +431,8 @@ int startup(u_short *port)
     name.sin_family = AF_INET;
     name.sin_port = htons(*port);
     name.sin_addr.s_addr = htonl(INADDR_ANY);
-    if ((setsockopt(httpd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on))) < 0)  
-    {  
+    if ((setsockopt(httpd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on))) < 0)
+    {
         error_die("setsockopt failed");
     }
     if (bind(httpd, (struct sockaddr *)&name, sizeof(name)) < 0)
@@ -482,7 +481,7 @@ void unimplemented(int client)
 int main(void)
 {
     int server_sock = -1;
-    u_short port = 4000;
+    unsigned short port = 4000;
     int client_sock = -1;
     struct sockaddr_in client_name;
     socklen_t  client_name_len = sizeof(client_name);
@@ -499,8 +498,6 @@ int main(void)
         if (client_sock == -1)
             error_die("accept");
         accept_request(&client_sock);
-        // if (pthread_create(&newthread , NULL, (void *)accept_request, (void *)(intptr_t)client_sock) != 0)
-        //     perror("pthread_create");
     }
 
     close(server_sock);
